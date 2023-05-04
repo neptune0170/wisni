@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "30846463239",
+    "project_id": "wsini-cc920",
+    "storage_bucket": "wsini-cc920.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:30846463239:android:e2a4163a8776d6888629a2",
+        "android_client_info": {
+          "package_name": "com.example.wsini"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "30846463239-9he1u2pj81fjdcgbm0matoq6j6tkm5d8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.wsini",
+            "certificate_hash": "97b9c7d381a0d85ce78c7334eda35fb1343ab182"
+          }
+        },
+        {
+          "client_id": "30846463239-ppjhdo4qt6q9ov4cq4n3dudml68db83t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFeNqAZuh_eO5tyqCfpgm_bS4S8MFRmuk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "30846463239-ppjhdo4qt6q9ov4cq4n3dudml68db83t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
