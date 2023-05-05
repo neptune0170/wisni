@@ -48,12 +48,13 @@ class _QrCodeScannerState extends State<QrCodeScanner> {
   //   controller!.resumeCamera();
   // }
 
+  String _docid = '6nd04S1UdBiTxHQsHS2y';
   String _name = '';
   Future<void> _fetchName() async {
     try {
       final snapshot = await FirebaseFirestore.instance
           .collection('address')
-          .doc('6nd04S1UdBiTxHQsHS2y')
+          .doc('${_docid}')
           .get();
       final data = snapshot.data() as Map<String, dynamic>;
       final name = data['name'] as String;
@@ -154,3 +155,4 @@ class _QrCodeScannerState extends State<QrCodeScanner> {
   //       .listen((barcode) => setState(() => this.barcode));
   // }
 //}
+//sffrf
