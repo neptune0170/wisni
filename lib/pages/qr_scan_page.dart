@@ -155,4 +155,3 @@ class _QrCodeScannerState extends State<QrCodeScanner> {
   //       .listen((barcode) => setState(() => this.barcode));
   // }
 //}
-//no change
