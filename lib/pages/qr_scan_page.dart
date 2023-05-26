@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
+
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:wsini/pages/navigatedPage.dart';
 
 class QrCodeScanner extends StatefulWidget {
   const QrCodeScanner({super.key});
@@ -28,42 +28,48 @@ class _QrCodeScannerState extends State<QrCodeScanner> {
     }
   }
 
-  // final qrKey = GlobalKey(debugLabel: 'QR');
-  // Barcode? barcode;
-  // QRViewController? controller;
+  void showAlertDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Alert'),
+          content: Text('Alert message'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
-  // @override
-  // void dispose() {
-  //   controller?.dispose();
-  //   super.dispose();
-  // }
+  // String _docid = '6nd04S1UdBiTxHQsHS2y';
+  String? _name;
 
-  // @override
-  // void reassemble() async {
-  //   super.reassemble();
-
-  //   if (Platform.isAndroid) {
-  //     await controller!.pauseCamera();
-  //   }
-  //   controller!.resumeCamera();
-  // }
-
-  String _docid = '6nd04S1UdBiTxHQsHS2y';
-  String _name = '';
-  Future<void> _fetchName() async {
-    try {
-      final snapshot = await FirebaseFirestore.instance
-          .collection('address')
-          .doc('${_docid}')
-          .get();
-      final data = snapshot.data() as Map<String, dynamic>;
-      final name = data['name'] as String;
-      setState(() {
-        _name = name;
-      });
-    } catch (e) {
-      print('Error fetching name: $e');
+  void fetchData(docid) {
+    Future<void> _fetchName(docid) async {
+      try {
+        final snapshot = await FirebaseFirestore.instance
+            .collection('address')
+            .doc(docid)
+            .get();
+        final data = snapshot.data() as Map<String, dynamic>;
+        final name = data['name'] as String;
+        setState(() {
+          _name = name;
+        });
+      } catch (e) {
+        print('Error fetching name: $e');
+      }
     }
+
+    _fetchName(docid).then((value) =>
+        Navigator.push(context, MaterialPageRoute(builder: (_) => NewPage())));
   }
 
   @override
@@ -88,7 +94,7 @@ class _QrCodeScannerState extends State<QrCodeScanner> {
           Expanded(
             flex: 1,
             child: Center(
-              child: (result != null && _name != "")
+              child: (result != null)
                   ? Text('Data: ${result!.code} name:$_name')
                   : Text('Scan a code'),
             ),
@@ -100,12 +106,15 @@ class _QrCodeScannerState extends State<QrCodeScanner> {
 
   void _onQRViewCreated(QRViewController controller) {
     this.controller = controller;
-    controller.scannedDataStream.listen((scanData) {
+    String doc_id = '';
+    controller.scannedDataStream.listen((scanData) async {
       setState(() {
         result = scanData;
+        doc_id = result!.code!;
+        // _fetchName(doc_id);
       });
+      fetchData(doc_id);
     });
-    _fetchName();
   }
 
   @override
@@ -113,46 +122,4 @@ class _QrCodeScannerState extends State<QrCodeScanner> {
     controller?.dispose();
     super.dispose();
   }
-
-  // return Scaffold(
-  //     //   body: Stack(
-  //     // alignment: Alignment.center,
-  //     // children: [
-  //     //   buildQrView(context),
-  //     //   Positioned(bottom: 10, child: buildResult()),
-  //     // ],
-  //     //  )
-  //     );
 }
-
-  // Widget buildResult() => Container(
-  //       padding: EdgeInsets.all(12),
-  //       decoration: BoxDecoration(
-  //           color: Color.fromRGBO(255, 255, 255, 1),
-  //           borderRadius: BorderRadius.circular(8)),
-  //       child: Text(
-  //         barcode != null ? 'Result : ${barcode!.code}' : 'Scan a Code!',
-  //         maxLines: 3,
-  //       ),
-  //     );
-
-  // Widget buildQrView(BuildContext context) => QRView(
-  //       key: qrKey,
-  //       onQRViewCreated: onQRViewCreated,
-  //       overlay: QrScannerOverlayShape(
-  //         borderColor: Colors.greenAccent,
-  //         borderRadius: 10,
-  //         borderLength: 20,
-  //         borderWidth: 10,
-  //         cutOutSize: MediaQuery.of(context).size.width * 0.8,
-  //       ),
-  //     );
-
-  // void onQRViewCreated(QRViewController controller) {
-  //   setState(() => this.controller = controller);
-
-  //   controller.scannedDataStream
-  //       .listen((barcode) => setState(() => this.barcode));
-  // }
-//}
-// faerg
