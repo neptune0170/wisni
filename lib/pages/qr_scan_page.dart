@@ -50,7 +50,9 @@ class _QrCodeScannerState extends State<QrCodeScanner> {
 
   // String _docid = '6nd04S1UdBiTxHQsHS2y';
   String? _name;
+  late final members;
 
+  final currentUserId = 'GtLj1cV33YgwNgcWJFASWmqrI1a2';
   void fetchData(docid) {
     Future<void> _fetchName(docid) async {
       try {
@@ -59,6 +61,7 @@ class _QrCodeScannerState extends State<QrCodeScanner> {
             .doc(docid)
             .get();
         final data = snapshot.data() as Map<String, dynamic>;
+        members = data['members'] as List<dynamic>;
         final name = data['name'] as String;
         setState(() {
           _name = name;
@@ -68,8 +71,23 @@ class _QrCodeScannerState extends State<QrCodeScanner> {
       }
     }
 
-    _fetchName(docid).then((value) =>
-        Navigator.push(context, MaterialPageRoute(builder: (_) => NewPage())));
+    _fetchName(docid).then((value) {
+      final isCurrentUserMember = members.contains(currentUserId);
+
+      if (_name != null && !isCurrentUserMember) {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (_) => NotAuthenticatedUser()));
+      }
+      if (isCurrentUserMember) {
+        // Handle the case where currentUserId is present in members
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (_) => NewPage()));
+      } else {
+        // Handle the case where currentUserId is not present in members
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (_) => NotAuthenticatedUser()));
+      }
+    });
   }
 
   @override
